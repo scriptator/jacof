@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 
 import thiagodnf.jacof.aco.ant.Ant;
@@ -90,6 +91,10 @@ public abstract class ACO implements Observer {
 	
 	/** The evaporation rate */
 	protected double rho;
+
+	protected List<Ant> globalBestList;
+	protected List<Ant> currentBestList;
+
 	/**
 	 * Constructor
 	 * 
@@ -101,6 +106,9 @@ public abstract class ACO implements Observer {
 		
 		this.problem = problem;
 		this.graph = new AntGraph(problem);
+
+		globalBestList = Lists.newArrayList();
+		currentBestList = Lists.newArrayList();
 	}
 	
 	/**
@@ -251,7 +259,7 @@ public abstract class ACO implements Observer {
 		// Update the current best solution
 		if (currentBest == null || problem.better(ant.getTourLength(), currentBest.getTourLength())) {
 			currentBest = ant.clone();
-		}
+		};
 		
 		// Update the global best solution
 		if (globalBest == null || problem.better(ant.getTourLength(), globalBest.getTourLength())) {
@@ -262,6 +270,8 @@ public abstract class ACO implements Observer {
 
 		// Verify if all ants have finished their search
 		if (++finishedAnts == numberOfAnts) {
+			currentBestList.add(currentBest.clone());
+			globalBestList.add(globalBest.clone());
 			// Restart the counter to build the solutions again
 			finishedAnts = 0;
 			
@@ -438,5 +448,13 @@ public abstract class ACO implements Observer {
 	/**
 	 * Returns a string representation of the object.
 	 */
-	public abstract String toString();	
+	public abstract String toString();
+
+	public List<Ant> getGlobalBestList() {
+		return globalBestList;
+	}
+
+	public List<Ant> getCurrentBestList() {
+		return currentBestList;
+	}
 }
