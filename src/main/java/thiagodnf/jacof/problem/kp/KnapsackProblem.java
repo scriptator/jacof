@@ -37,12 +37,20 @@ public class KnapsackProblem extends Problem {
 	public KnapsackProblem(String filename) throws IOException{
 		
 		InstanceReader reader = new InstanceReader(new File(filename));
-		
-		this.numberOfItems = reader.readIntegerValue();
-		this.weights = reader.readDoubleArray();
-		this.profits = reader.readDoubleArray();
-		this.capacity = reader.readDoubleValue();
-		
+
+		int[] line = reader.readIntegerArray();
+		this.numberOfItems = line[0];
+		this.capacity = line[1];
+
+		this.weights = new double[numberOfItems];
+		this.profits = new double[numberOfItems];
+		for (int i = 0; i < this.numberOfItems; i++) {
+			line = reader.readIntegerArray();
+			profits[i] = line[0];
+			weights[i] = line[1];
+		}
+
+
 		this.profitR = Arrays.stream(profits).reduce(Double::sum).getAsDouble();
 		this.weightR = Arrays.stream(weights).reduce(Double::sum).getAsDouble();
 	}

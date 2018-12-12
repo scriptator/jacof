@@ -16,14 +16,14 @@ public class ACSRunner {
 	
 	public static void main(String[] args) throws ParseException, IOException {
 
-		String instance = "src/main/resources/problems/kp/p06.kp";
+		String instance = "src/main/resources/problems/instances_01_KP/low-dimensional/f10_l-d_kp_20_879";
 
 		Problem problem = new KnapsackProblem(instance);
 
 		AntColonySystem aco = new AntColonySystem(problem);
 
 		aco.setNumberOfAnts(50);
-		aco.setNumberOfIterations(3000);
+		aco.setNumberOfIterations(300);
 		aco.setAlpha(1.0);
 		aco.setBeta(2.0);
 		aco.setRho(0.1);

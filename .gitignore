@@ -92,4 +92,6 @@ buildNumber.properties
 # Exclude maven wrapper
 !/.mvn/wrapper/maven-wrapper.jar
 
-# End of https://www.gitignore.io/api/java,eclipse,maven
+# End of https://www.gitignore.io/api/java,eclipse,maven.idea
+.idea
+jacof.iml
