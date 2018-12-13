@@ -3,99 +3,96 @@ package thiagodnf.jacof.util.io;
 import com.google.common.base.Preconditions;
 
 /**
- *  Instance Reader in TSPLIB format
- * 
+ * Instance Reader in TSPLIB format
+ *
  * @author Thiago N. Ferreira
  * @version 1.0.0
  */
 public class TSPLIBReader {
 
-	protected InstanceReader reader;
+    protected InstanceReader reader;
+    protected double[][] coord;
+    private int dimension;
+    private double[][] distance;
 
-	private int dimension;
+    public TSPLIBReader(InstanceReader reader) {
 
-	protected double[][] coord;
+        Preconditions.checkNotNull(reader, "The reader should not null");
 
-	private double[][] distance;
+        this.reader = reader;
 
-	public TSPLIBReader(InstanceReader reader) {
-		
-		Preconditions.checkNotNull(reader, "The reader should not null");
-		
-		this.reader = reader;
+        readHeader();
+        readCoordinates();
+        convertCoordToDistance();
+    }
 
-		readHeader();
-		readCoordinates();
-		convertCoordToDistance();
-	}
+    public static double euclideanDistance(double x1, double y1, double x2, double y2) {
+        double xDistance = Math.abs(x1 - x2);
+        double yDistance = Math.abs(y1 - y2);
 
-	public void readHeader() {
-		String line = reader.readLine();
+        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
+    }
 
-		while (!line.equalsIgnoreCase("NODE_COORD_SECTION")) {
-			String[] split = line.split(":");
+    public void readHeader() {
+        String line = reader.readLine();
 
-			String key = split[0].trim();
+        while (!line.equalsIgnoreCase("NODE_COORD_SECTION")) {
+            String[] split = line.split(":");
 
-			if (key.equalsIgnoreCase("DIMENSION")) {
-				dimension = Integer.valueOf(split[1].trim());
-			}
+            String key = split[0].trim();
 
-			line = reader.readLine();
+            if (key.equalsIgnoreCase("DIMENSION")) {
+                dimension = Integer.valueOf(split[1].trim());
+            }
 
-			if (line == null) {
-				break;
-			}
-		}
-	}
+            line = reader.readLine();
 
-	private void readCoordinates() {
-		coord = new double[dimension][3];
+            if (line == null) {
+                break;
+            }
+        }
+    }
 
-		String line = reader.readLine();
-		int i = 0;
-		while (line != null) {
-			String[] split = line.split("\\s+");
+    private void readCoordinates() {
+        coord = new double[dimension][3];
 
-			coord[i][0] = Double.valueOf(split[0].trim());
-			coord[i][1] = Double.valueOf(split[1].trim());
-			coord[i][2] = Double.valueOf(split[2].trim());
+        String line = reader.readLine();
+        int i = 0;
+        while (line != null && !line.equals("EOF")) {
+            String[] split = line.split("\\s+");
 
-			i++;
-			line = reader.readLine();
-		}
-	}
+            coord[i][0] = Double.valueOf(split[0].trim());
+            coord[i][1] = Double.valueOf(split[1].trim());
+            coord[i][2] = Double.valueOf(split[2].trim());
 
-	private void convertCoordToDistance() {
-		distance = new double[dimension][dimension];
+            i++;
+            line = reader.readLine();
+        }
+    }
 
-		for (int i = 0; i < dimension; i++) {
-			for (int j = i; j < dimension; j++) {
-				if (i != j) {
-					double x1 = coord[i][1];
-					double y1 = coord[i][2];
-					double x2 = coord[j][1];
-					double y2 = coord[j][2];
+    private void convertCoordToDistance() {
+        distance = new double[dimension][dimension];
 
-					distance[i][j] = euclideanDistance(x1, y1, x2, y2);
-					distance[j][i] = distance[i][j];
-				}
-			}
-		}
-	}
+        for (int i = 0; i < dimension; i++) {
+            for (int j = i; j < dimension; j++) {
+                if (i != j) {
+                    double x1 = coord[i][1];
+                    double y1 = coord[i][2];
+                    double x2 = coord[j][1];
+                    double y2 = coord[j][2];
 
-	public static double euclideanDistance(double x1, double y1, double x2, double y2) {
-		double xDistance = Math.abs(x1 - x2);
-		double yDistance = Math.abs(y1 - y2);
+                    distance[i][j] = euclideanDistance(x1, y1, x2, y2);
+                    distance[j][i] = distance[i][j];
+                }
+            }
+        }
+    }
 
-		return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2));
-	}
+    public int getDimension() {
+        return dimension;
+    }
 
-	public int getDimension() {
-		return dimension;
-	}
-
-	public double[][] getDistance() {
-		return distance;
-	}
+    public double[][] getDistance() {
+        return distance;
+    }
 }

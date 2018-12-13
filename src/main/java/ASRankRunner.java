@@ -15,7 +15,7 @@ public class ASRankRunner {
 	
 	public static void main(String[] args) throws ParseException, IOException {
 
-		String instance = "src/main/resources/problems/tsp/oliver30.tsp";
+		String instance = "src/main/resources/problems/tsp/lu980.tsp";
 
 		Problem problem = new TravellingSalesmanProblem(instance);
 
