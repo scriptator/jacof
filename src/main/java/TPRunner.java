@@ -24,7 +24,7 @@ public class TPRunner {
     static final Logger LOGGER = Logger.getLogger(TPRunner.class);
 
     public static void main(String[] args) throws ParseException, IOException {
-        String folder = "src/main/resources/problems/instances_02_TSP/ireland/";
+        String folder = "src/main/resources/problems/instances_02_TSP/";
 
         new File(folder + "sol").mkdir();
         for (String fileName : Lists.newArrayList(new File(folder).listFiles()).stream().map(file -> {
@@ -44,7 +44,7 @@ public class TPRunner {
 
             AntColonySystem aco = new AntColonySystem(problem);
 
-            aco.setNumberOfAnts(2);
+            aco.setNumberOfAnts(20);
             aco.setNumberOfIterations(100);
             aco.setAlpha(0.5);
             aco.setBeta(0.5);

@@ -182,11 +182,11 @@ public abstract class ACO implements Observer {
 	protected void updatePheromones() {
 		
 		LOGGER.debug("Updating pheromones");
-		
-		for (int i = 0; i < problem.getNumberOfNodes(); i++) {
 
-			for (int j = i; j < problem.getNumberOfNodes(); j++) {
-			
+        int numberOfNodes = problem.getNumberOfNodes();
+        for (int i = 0; i < numberOfNodes; i++) {
+			System.out.println(i); // TODO: remove this 
+			for (int j = i; j < numberOfNodes; j++) {
 				if (i != j) {
 					// Do Evaporation
 					for (AbstractEvaporation evaporation : evaporations) {

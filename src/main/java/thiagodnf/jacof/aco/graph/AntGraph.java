@@ -102,7 +102,7 @@ public class AntGraph {
 	 * @param j Final vertex
 	 * @param value The pheromone value
 	 */
-	public synchronized void setTau(int i, int j, double value) {
+	public void setTau(int i, int j, double value) {
 		this.tau[i][j] = value;
 	}
 
@@ -113,7 +113,7 @@ public class AntGraph {
 	 * @param j Final vertex
 	 * @return The pheromone value
 	 */
-	public synchronized double getTau(int i, int j) {
+	public double getTau(int i, int j) {
 		return this.tau[i][j];
 	}
 	
