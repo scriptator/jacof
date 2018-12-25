@@ -4,6 +4,7 @@ import thiagodnf.jacof.aco.ant.exploration.QSelection;
 import thiagodnf.jacof.aco.ant.initialization.AnAntAtEachVertex;
 import thiagodnf.jacof.aco.ant.selection.RouletteWheel;
 import thiagodnf.jacof.aco.graph.initialization.ACSInitialization;
+import thiagodnf.jacof.aco.rule.globalupdate.deposit.ImprovedPartialDeposit;
 import thiagodnf.jacof.aco.rule.globalupdate.deposit.PartialDeposit;
 import thiagodnf.jacof.aco.rule.globalupdate.evaporation.FullEvaporation;
 import thiagodnf.jacof.aco.rule.localupdate.ACSLocalUpdatingRule;

@@ -12,6 +12,7 @@ import thiagodnf.jacof.util.ExecutionStats;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -28,7 +29,6 @@ public class KPRunner {
     public static void main(String[] args) throws ParseException, IOException {
         Executor executor = Executors.newFixedThreadPool(3);
         String[] folders = new String[]{
-                //"src/main/resources/problems/instances_01_KP/low-dimensional/",
                 "src/main/resources/problems/instances_01_KP/large_scale/"
         };
         for (String folder : folders) {
@@ -50,25 +50,35 @@ public class KPRunner {
     }
 
     public static void runACS_KP(String folder, String instance) throws IOException {
-        List<String> results = Lists.newArrayList();
-        for (int i = 0; i < 5; i++) {
+        List<String> bestPath = Lists.newArrayList();
+        List<String> parameter = Lists.newArrayList();
+        for (int i = 0; i < 1; i++) {
             Problem problem = new KnapsackProblem(folder + instance);
 
             AntColonySystem aco = new AntColonySystem(problem);
 
-            aco.setNumberOfAnts(25);
-            aco.setNumberOfIterations(100);
-            aco.setAlpha(2.5);
-            aco.setBeta(0.5);
-            aco.setRho(0);
+            aco.setNumberOfAnts(50);
+            aco.setNumberOfIterations(5);
+            aco.setAlpha(1);
+            aco.setBeta(10);
+            aco.setRho(0.1);
             aco.setOmega(0.2);
             aco.setQ0(0.9);
 
+            //save paramter
+            if (parameter.size() != 7) {
+                parameter.add("Number of ants: " + aco.getNumberOfAnts());
+                parameter.add("Number of iterations: " + aco.getNumberOfIterations());
+                parameter.add("alpha: " + aco.getAlpha());
+                parameter.add("beta: " + aco.getBeta());
+                parameter.add("rho: " + aco.getRho());
+                parameter.add("omega: " + aco.getOmega());
+                parameter.add("q0: " + aco.getQ0());
+            }
 
             ExecutionStats es = ExecutionStats.execute(aco, problem);
             es.printStats();
-            results.add(String.format("%f;%f", es.aco.getGlobalBest().getTourLength(), es.executionTime));
-
+            bestPath.add(String.format("%f;%f;%s", es.aco.getGlobalBest().getTourLength(), es.executionTime, Arrays.toString(es.bestSolution)));
             XYChart chart = QuickChart
                     .getChart("Perfomance over time", "X", "Y",
                             new String[]{"global best", "current best"},
@@ -83,7 +93,8 @@ public class KPRunner {
             BitmapEncoder.saveBitmap(chart, String.format("%s/sol/%s%d.png", folder, instance, i), BitmapEncoder.BitmapFormat.PNG);
 
         }
-        Files.write(new File(String.format("%s/sol/%s.sol", folder, instance)).toPath(), results);
+        Files.write(new File(String.format("%s/sol/%s_solution.txt", folder, instance)).toPath(), bestPath);
+        Files.write(new File(String.format("%s/sol/%s_parameter.txt", folder, instance)).toPath(), parameter);
     }
 
 }

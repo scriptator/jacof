@@ -185,7 +185,7 @@ public abstract class ACO implements Observer {
 
         int numberOfNodes = problem.getNumberOfNodes();
         for (int i = 0; i < numberOfNodes; i++) {
-			System.out.println(i); // TODO: remove this 
+			//System.out.println(i); // TODO: remove this
 			for (int j = i; j < numberOfNodes; j++) {
 				if (i != j) {
 					// Do Evaporation
@@ -266,7 +266,7 @@ public abstract class ACO implements Observer {
 			globalBest = ant.clone();
 		}
 		
-		LOGGER.debug(ant);
+		//LOGGER.debug(ant);
 
 		// Verify if all ants have finished their search
 		if (++finishedAnts == numberOfAnts) {
