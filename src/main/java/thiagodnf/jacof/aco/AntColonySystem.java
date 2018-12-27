@@ -51,7 +51,7 @@ public class AntColonySystem extends AntSystem {
 
 		// Global Update Pheromone Rule
 		getEvaporations().add(new FullEvaporation(this, getRho()));
-		getDeposits().add(new PartialDeposit(this, getRho(), new GlobalBest(this)));
+		getDeposits().add(new ImprovedPartialDeposit(this, getRho(), new GlobalBest(this)));
 	}
 	
 	@Override

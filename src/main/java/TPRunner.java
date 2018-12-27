@@ -25,7 +25,7 @@ public class TPRunner {
     static final Logger LOGGER = Logger.getLogger(TPRunner.class);
 
     public static void main(String[] args) throws ParseException, IOException {
-        String folder = "src/main/resources/problems/instances_02_TSP/luxemburg/";
+        String folder = "src/main/resources/problems/instances_02_TSP/panama/";
 
         new File(folder + "sol").mkdir();
         for (String fileName : Lists.newArrayList(new File(folder).listFiles()).stream().map(file -> {
@@ -42,13 +42,13 @@ public class TPRunner {
         List<String> bestPath = Lists.newArrayList();
         List<String> parameter = Lists.newArrayList();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Problem problem = new TravellingSalesmanProblem(folder + instance, true);
 
             AntColonySystem aco = new AntColonySystem(problem);
 
-            aco.setNumberOfAnts(500);
-            aco.setNumberOfIterations(100);
+            aco.setNumberOfAnts(50);
+            aco.setNumberOfIterations(500);
             aco.setAlpha(1);                    //Exploitation parameter, sets how the ants are attracted to pheromone concentration.
                                                 //at 0 algorithms becomes greedy (random spikes) - high: dig into local optima
             aco.setBeta(10);                    //Exploration parameter, sets how the ants are more attracted to try out shorter paths.

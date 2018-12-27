@@ -1,5 +1,5 @@
 Number of ants: 500
-Number of iterations: 100
+Number of iterations: 500
 alpha: 1.0
 beta: 10.0
 rho: 0.1
