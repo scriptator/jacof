@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
@@ -39,16 +40,19 @@ public class TPRunner {
     }
 
     public static void runACS_TSP(String folder, String instance) throws IOException {
-        List<String> bestPath = Lists.newArrayList();
+        List<String> solution = Lists.newArrayList();
+        solution.add("Objective Value,Runtime (s)");
         List<String> parameter = Lists.newArrayList();
 
-        for (int i = 0; i < 1; i++) {
+        List<String> path = new LinkedList<>();
+
+        for (int i = 0; i < 3; i++) {
             Problem problem = new TravellingSalesmanProblem(folder + instance, true);
 
             AntColonySystem aco = new AntColonySystem(problem);
 
-            aco.setNumberOfAnts(50);
-            aco.setNumberOfIterations(500);
+            aco.setNumberOfAnts(35);
+            aco.setNumberOfIterations(100);
             aco.setAlpha(1);                    //Exploitation parameter, sets how the ants are attracted to pheromone concentration.
                                                 //at 0 algorithms becomes greedy (random spikes) - high: dig into local optima
             aco.setBeta(10);                    //Exploration parameter, sets how the ants are more attracted to try out shorter paths.
@@ -61,7 +65,6 @@ public class TPRunner {
                                                 //lower: more likely to be chosen by exploitation
                                                 //higher: more likely to by chosen by (biased) exploration
                                                 // 0.9 seems to be a good value
-
             //save paramter
             if (parameter.size() != 7) {
                 parameter.add("Number of ants: " + aco.getNumberOfAnts());
@@ -72,11 +75,10 @@ public class TPRunner {
                 parameter.add("omega: " + aco.getOmega());
                 parameter.add("q0: " + aco.getQ0());
             }
-
             ExecutionStats es = ExecutionStats.execute(aco, problem);
             es.printStats();
-            bestPath.add(String.format("%f;%f;%s", es.aco.getGlobalBest().getTourLength(), es.executionTime, Arrays.toString(es.bestSolution)));
-
+            solution.add(String.format("%s,%s", String.valueOf(es.aco.getGlobalBest().getTourLength()), String.valueOf(es.executionTime/1000)));
+            path.add(Arrays.toString(es.bestSolution) + "\n\n");
             XYChart chart = QuickChart
                     .getChart("Perfomance over time", "X", "Y",
                             new String[]{"global best", "current best"},
@@ -85,18 +87,12 @@ public class TPRunner {
                                     aco.getGlobalBestList().stream().mapToDouble(ant -> ant.getTourLength()).toArray(),
                                     aco.getCurrentBestList().stream().mapToDouble(ant -> ant.getTourLength()).toArray()
                             });
-
-            //new SwingWrapper(chart).displayChart();
-
             BitmapEncoder.saveBitmap(chart, String.format("%s/sol/%s%d.png", folder, instance, i), BitmapEncoder.BitmapFormat.PNG);
 
         }
-
-
-        Files.write(new File(String.format("%s/sol/%s_solution.txt", folder, instance)).toPath(), bestPath);
+        Files.write(new File(String.format("%s/sol/%s_solution.csv", folder, instance)).toPath(), solution);
+        Files.write(new File(String.format("%s/sol/%s_path.txt", folder, instance)).toPath(), path);
         Files.write(new File(String.format("%s/sol/%s_parameter.txt", folder, instance)).toPath(), parameter);
-
-
     }
 
 }
