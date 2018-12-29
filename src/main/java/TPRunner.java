@@ -46,13 +46,13 @@ public class TPRunner {
 
         List<String> path = new LinkedList<>();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
             Problem problem = new TravellingSalesmanProblem(folder + instance, true);
 
             AntColonySystem aco = new AntColonySystem(problem);
 
-            aco.setNumberOfAnts(35);
-            aco.setNumberOfIterations(100);
+            aco.setNumberOfAnts(25);
+            aco.setNumberOfIterations(50);
             aco.setAlpha(1);                    //Exploitation parameter, sets how the ants are attracted to pheromone concentration.
                                                 //at 0 algorithms becomes greedy (random spikes) - high: dig into local optima
             aco.setBeta(10);                    //Exploration parameter, sets how the ants are more attracted to try out shorter paths.
